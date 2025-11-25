@@ -80,6 +80,12 @@ INDEX_HTML = """
     send.addEventListener('click', ask);
     msg.addEventListener('keydown', (e) => { if (e.key === 'Enter') ask(); });
     clearBtn.addEventListener('click', () => { history = []; log.innerHTML=''; });
+   
+    // Vulnerable to DOM XSS
+    const userInput = new URLSearchParams(window.location.search).get("msg");
+    document.body.innerHTML = "Message: " + userInput;
+
+
   </script>
 </body>
 </html>
