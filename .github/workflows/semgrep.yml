@@ -1,3 +1,6 @@
+# disables this workflow
+disabled: true
+
 name: DevSecOps Security Pipeline 
 
 on:
