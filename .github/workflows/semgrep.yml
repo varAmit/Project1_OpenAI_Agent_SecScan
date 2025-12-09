@@ -1,10 +1,14 @@
-name: DevSecOps Security Pipeline
+name: DevSecOps Security Pipeline 
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+
+permissions:
+  contents: read
+  security-events: write
 
 jobs:
   security:
@@ -37,11 +41,13 @@ jobs:
     - name: Trivy dependency scan (SCA)
       uses: aquasecurity/trivy-action@master
       with:
-        scan-type: fs
-        format: sarif
-        output: trivy-deps.sarif
+        scan-type: 'fs'
+        format: 'sarif'
+        output: 'trivy-deps.sarif'
         vuln-type: 'library'
+        severity: 'CRITICAL,HIGH'
         ignore-unfixed: true
+        exit-code: '1'   # fail if CRITICAL/HIGH CVEs exist
 
     # -------------------------
     # 3) IaC scan (Terraform / Cloud / K8s) with Checkov
@@ -82,7 +88,6 @@ jobs:
 
     # -------------------------
     # 6) Upload SARIF to Microsoft Defender for DevOps
-    #    (same repo, same run)
     # -------------------------
     - name: Upload Semgrep SARIF to Defender
       uses: microsoft/security-devops-action@v1
