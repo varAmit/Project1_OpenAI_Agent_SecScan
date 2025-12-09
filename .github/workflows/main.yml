@@ -63,3 +63,24 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: trivy-deps.sarif
+
+      # -------------------------
+      # 4) Upload SARIF to Microsoft Defender for Cloud
+      # -------------------------
+      - name: Upload Semgrep SARIF to Defender
+        uses: microsoft/security-devops-action@v1
+        with:
+          securityScan: false
+          uploadSarif: true
+          sarifFile: semgrep.sarif
+        env:
+          SECUREDEVPAYLOAD: ${{ secrets.DEFENDER_API_KEY }}
+
+      - name: Upload Trivy SARIF to Defender
+        uses: microsoft/security-devops-action@v1
+        with:
+          securityScan: false
+          uploadSarif: true
+          sarifFile: trivy-deps.sarif
+        env:
+          SECUREDEVPAYLOAD: ${{ secrets.DEFENDER_API_KEY }}
